@@ -17,7 +17,7 @@ int main(void)
     std::string filePrefix = "LOG";
     int maxFolderSizeMb = 100;
     int maxFileSizeMb = 1;
-    //Logger::setSaveLogParams(folder, filePrefix, maxFolderSizeMb, maxFileSizeMb);
+    Logger::setSaveLogParams(folder, filePrefix, maxFolderSizeMb, maxFileSizeMb);
     Logger log;
 
     std::thread test([=](Logger* log) {
