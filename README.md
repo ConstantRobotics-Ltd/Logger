@@ -2,69 +2,19 @@
 - [OVERVIEW](#overview)
 - [API DESCRIPTION](#api-description)
   - [getVersion(..)](#getversion)
-  - [createTracer(..)](#createtracer)
+  - [CTOR and DTOR(..)](#ctro-and-dtor)
+  - [setSaveLogParams(..)](#setsavelogparams)
   - [print(..)](#print)
 - [USAGE EXAMPLE](#usage-example)
 
 ## OVERVIEW
 
-This project helps implement bug tracking. A little explanation:
-
-When creating a tracer, you will need to specify a name for it and select the minimum level for outputting messages (this level is private and can be changed using the `setLevel` method)
-
-Example:
-
-```cpp
-std::shared_ptr<Tracer> warning = Tracer::createTracer(WARNING,"Warning");
-```
-
-This tracer will output `WARNING` messages and above (`EXCEPTION` and `CRITICAL`), i.e. if you try to print a message at the `DEBUG` level, it will be ignored.
-
-Example:
-```cpp
-std::shared_ptr<Tracer> warning = Tracer::createTracer(WARNING,"Warning");
-
-warning->print(DEBUG)     << "Debug level"     << std::endl;
-warning->print(INFO)      << "Info level"      << std::endl;
-warning->print(WARNING)   << "Warning level"   << std::endl;
-warning->print(EXCEPTION) << "Exception level" << std::endl;
-warning->print(CRITICAL)  << "Critical level"  << std::endl;
-```
-
-Below is an example output (Debug and Info levels will be skipped):
-
-```
-[WARNING  ] Warning level
-[EXCEPTION] Exception level
-[CRITICAL ] Critical level
-```
-
-It was about the private level and the message level. But the tracer class also has the ability to set the global trace level - method `Tracer::setTraceLevel(TraceLevel globallevel)`. All messages below this level will be ignored. Example:
-
-```cpp
-std::shared_ptr<Tracer> warning = Tracer::createTracer(WARNING,"Warning");
-
-// This means that all messages below the global level from all tracers will be additionally ignored.
-Tracer::setTraceLevel(EXCEPTION);
-
-warning->print(DEBUG)     << "Debug level"     << std::endl;
-warning->print(INFO)      << "Info level"      << std::endl;
-warning->print(WARNING)   << "Warning level"   << std::endl;
-warning->print(EXCEPTION) << "Exception level" << std::endl;
-warning->print(CRITICAL)  << "Critical level"  << std::endl;
-```
-
-Below is an example output (Debug and Info levels will be skipped):
-
-```
-[EXCEPTION] Exception level
-[CRITICAL ] Critical level
-```
+This project helps implement simple color logging logic.
 
 ## API DESCRIPTION
 
-The **Tracer** contains one main class `Tracer` which can be used 
-to simplify bug tracking. 
+The **Logger** contains one main class `Logger` which can be used 
+to simplify logging. 
 
 ### getVersion(..)
 
@@ -81,37 +31,57 @@ static std::string getVersion();
 
 *Static method to get string of current version of library.*
 
-### createTracer(..)
+### CTOR and DTOR(..)
 
 ```cpp
 /**
- * @brief Method to create a tracer
- *
- * @param level Minimum trace level at which messages will be printed
- * @param name Tracer name
- *
- * @return Tracer object
+ * @brief Class constructor.
  */
-static std::shared_ptr<Tracer> createTracer(TraceLevel level, std::string name);
+Logger();
+
+/**
+ * @brief Class destructor.
+ */
+~Logger();
+```
+##### Description
+
+*constructor and destructor methods to create Logger.*
+
+### setSaveLogParams(..)
+
+```cpp
+/**
+ * @brief Method for setting params for loggers
+ *
+ * @param folder Log folder
+ * @param filePrefix Start log file filename
+ * @param maxFolderSizeMb Max file size (Mb)
+ * @param maxFileSizeMb Max folder size (Mb)
+ *
+ * @return true if params are set.
+ */
+static bool setSaveLogParams(
+        std::string folder, std::string filePrefix,
+        int maxFolderSizeMb, int maxFileSizeMb);
 ```
 
 ##### Description
 
-*Static method to create tracer.*
+*Static method for setting params for loggers.*
 
 ### print(..)
 
 ```cpp
-/**
- * @brief Methods to prints the received message through the operator "<<"
+ /**
+ * @brief Methods to prints message through the operator "<<"
  *
- * @param msgLevel Message importance level. If it is higher or equal to
- * the minimum level of the tracer, then the message will be printed
+ * @param color Print color
+ * @param flags Options for print
  *
- * @return object that, when destroyed, will output a message to the stream.
+ * @return object that will output a message to the stream when destroyed.
  */
-ColorPrint print(TraceLevel msgLevel, std::string traceHeader = "");
-ColorPrint print(TraceColor msgColor, std::string traceHeader = "");
+ColorPrint print(PrintColor color, PrintFlag flags = PrintFlag::CONSOLE);
 ```
 
 ##### Description
@@ -124,49 +94,34 @@ ColorPrint print(TraceColor msgColor, std::string traceHeader = "");
 #include <iostream>
 #include <map>
 
-#include "Tracer.h"
-
+#include "Logger.h"
 using namespace cr::utils;
+
 
 // Entry point.
 int main(void)
 {
     std::cout<<"=================================================" << std::endl;
-    std::cout<<"TracerExample " << Tracer::getVersion()            << std::endl;
+    std::cout<<"LoggerExample " << Logger::getVersion()            << std::endl;
     std::cout<<"=================================================" << std::endl;
     std::cout<<std::endl;
 
-    // Prints all messages from DEBUG level and above
-    std::shared_ptr<Tracer> tracer = Tracer::createTracer(DEBUG,"Main");
+    std::string folder = "LoggerExample";
+    std::string filePrefix = "LOG";
+    int maxFolderSizeMb = 100;
+    int maxFileSizeMb = 1;
+    Logger::setSaveLogParams(folder, filePrefix, maxFolderSizeMb, maxFileSizeMb);
+    Logger log;
 
-    std::cout<< "Long Trace: " << std::endl;
-    std::cout<<"=================================================" << std::endl;
-    TRACE(tracer, LONG_PRINT, WARNING, "%s\n", "WARNING message");
-    std::cout<<"=================================================" << std::endl;
-    std::cout << std::endl;
+    std::thread test([=](Logger* log) {
+        while (true)
+            log->print(PrintColor::GREEN) << "THREAD" << std::endl;
+    }, &log);
 
-    std::cout<<"Short Trace: " << std::endl;
-    std::cout<<"=================================================" << std::endl;
-    TRACE(tracer, SHORT_PRINT, EXCEPTION, "%s\n", "EXCEPTION message");
-    std::cout<<"=================================================" << std::endl;
-    std::cout << std::endl;
+    while(true) {
+        log.print(PrintColor::RED, PrintFlag::FILE) << "MAIN" << std::endl;
+    }
 
-    std::cout<<"Simple Print: " << std::endl;
-    std::cout<<"=================================================" << std::endl;
-    tracer->print(INFO) << "INFO message" << std::endl;
-    std::cout<<"=================================================" << std::endl;
-    std::cout << std::endl;
-
-    std::cout<<"Color Print without Head: " << std::endl;
-    std::cout<<"=================================================" << std::endl;
-    tracer->print(MAGENTA) << "MAGENTA color message without head" << std::endl;
-    std::cout<<"=================================================" << std::endl;
-    std::cout << std::endl;
-
-    std::cout<<"Color Print with Head: " << std::endl;
-    std::cout<<"=================================================" << std::endl;
-    tracer->print(RED, "RED") << "Simple message with color head"  << std::endl;
-    std::cout<<"=================================================" << std::endl;
-    std::cout << std::endl;
+	return 1;
 }
 ```
