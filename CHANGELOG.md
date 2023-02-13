@@ -1,29 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [2.3.0] - 11-Jul-2022
+## [1.0.0] - 13-Feb-2023
 
 ### Added
 
-- Added logging functionality to file.
-
-## [2.2.3] - 15-Jun-2022
-
-### Added
-
-- Readme and Changelog.
-
-### Changed
-
-- Library examples
-
-## [2.0.0] - 15-Jun-2022
-
-### Added
-
-- class Tracer; // Implement tracing
+- class Logger; // Implement logging
 - method getVersion(..); // Method to get string of current version of library.
-- method createTracer(..); // Method to create a tracer
+- method setSaveLogParams(..); // Method for setting params for loggers
 - method print(..); // Methods to prints the received message through the operator "<<"
 
 ## [0.0.1] - 01-Jun-2000
