@@ -14,7 +14,7 @@ using namespace cr::utils;
 using namespace std::filesystem;
 
 std::mutex ColorPrint::m_printMutex;
-LoggerSettings Logger::m_settings{0};
+LoggerSettings Logger::m_settings;
 std::mutex Logger::m_fileSysMutex;
 std::string Logger::m_fileName = "";
 bool Logger::m_isSettingsSetup = false;
