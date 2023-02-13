@@ -12,6 +12,7 @@
 namespace cr {
 namespace utils {
 
+/// Colors for print
 enum class PrintColor
 {
     NORMAL,
@@ -24,6 +25,7 @@ enum class PrintColor
     WHITE
 };
 
+/// Options for print
 enum class PrintFlag
 {
     CONSOLE = 1,
@@ -34,11 +36,10 @@ enum class PrintFlag
 class LoggerSettings
 {
 public:
-    int count{0};
-    std::string prefix{""};
-    std::string folder{""};
-    int maxFileSizeMb{1};
-    int maxFolderSizeMb{100};
+    std::string prefix{""};  /// start filename (e.g. /LOG***.txt)
+    std::string folder{""};  /// log folder
+    int maxFileSizeMb{0};    /// max file size (Mb)
+    int maxFolderSizeMb{0};  /// max folder size (Mb)
 };
 
 class ColorPrint
@@ -47,17 +48,19 @@ public:
     /**
      * @brief Class constructor.
      *
-     * @param color Logger color
-     * @param file File to add
+     * @param color Print color
+     * @param settings Logger settings for print
+     * @param flags Additional printing options
+     * @param filename Print file name
      */
     ColorPrint(PrintColor color, LoggerSettings settings,
-               uint8_t flags, std::string fileName);
+               uint8_t flags, std::string filename);
 
     /**
      * @brief Default destructor
      *
      * The destructor prints all messages, that were added by << operator,
-     * before the tracer are destroyed
+     * before the ColorPrint are destroyed
      */
     ~ColorPrint();
 
@@ -73,8 +76,6 @@ public:
         return *m_stream;
     }
 
-    void print(PrintColor color, const std::string &msg, uint8_t flags);
-
 private:
     static std::mutex m_printMutex;
     std::ostringstream* m_stream;
@@ -87,7 +88,7 @@ private:
 /**
  * @class
  *
- * @brief Implement tracing
+ * @brief Implement logger
  */
 class Logger
 {
@@ -102,9 +103,6 @@ public:
 
     /**
      * @brief Class constructor.
-     *
-     * @param level Minimum trace level at which messages will be printed
-     * @param name Tracer name.
      */
     Logger();
 
@@ -114,31 +112,34 @@ public:
     ~Logger();
 
     /**
-     * @brief Method for setting file for a specific tracer
+     * @brief Method for setting params for loggers
      *
-     * @param filename The name of the file where the log will be printed.
-     * @param name Tracer name. If name is empty, this file will be set for all
-     * tracers.
+     * @param folder Log folder
+     * @param filePrefix Start log file filename
+     * @param maxFolderSizeMb Max file size (Mb)
+     * @param maxFileSizeMb Max folder size (Mb)
      *
-     * @return true if a tracer was found by name
+     * @return true if params are set.
      */
-    static bool setSaveLogParams(std::string folder, std::string filePrefix,
-                          int maxFolderSizeMb, int maxFileSizeMb);
+    static bool setSaveLogParams(
+            std::string folder, std::string filePrefix,
+            int maxFolderSizeMb, int maxFileSizeMb);
 
     /**
-     * @brief Methods to prints the received message through the operator "<<"
+     * @brief Methods to prints message through the operator "<<"
      *
-     * @param msgLevel Message importance level. If it is higher or equal to
-     * the minimum level of the tracer, then the message will be printed
+     * @param color Print color
+     * @param flags Options for print
      *
-     * @return object that, when destroyed, will output a message to the stream.
+     * @return object that will output a message to the stream when destroyed.
      */
-    ColorPrint print(PrintColor msgColor, PrintFlag flags = PrintFlag::CONSOLE);
+    ColorPrint print(PrintColor color, PrintFlag flags = PrintFlag::CONSOLE);
 
 private:
     static LoggerSettings m_settings;
     static std::string m_fileName;
     static std::mutex m_fileSysMutex;
+    static bool m_isSettingsSetup;
 
     /// File info structure.
     typedef struct {
@@ -152,15 +153,15 @@ private:
      * @param folder Folder path.
      * @return List of files info.
      */
-    static std::vector<FileInfo> getFilesInFolder(std::string folder);
+    static std::vector<FileInfo> _getFilesInFolder(std::string folder);
 
     /**
      * @brief Remove unnecessary files.
      * @param files List of files info.
      * @param maxFolderSizeMb Max folder size MB.
      */
-    static void removeUnnecessaryFiles(std::vector<FileInfo> files,
-                                int maxFolderSizeMb);
+    static void _removeUnnecessaryFiles(
+            std::vector<FileInfo> files, int maxFolderSizeMb);
 
     /**
      * @brief Reinit Logging Process.

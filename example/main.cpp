@@ -2,11 +2,8 @@
 #include <map>
 
 #include "Logger.h"
-
 using namespace cr::utils;
 
-void colorPrint();
-void colorPrintWithHead();
 
 // Entry point.
 int main(void)
@@ -23,8 +20,7 @@ int main(void)
     Logger::setSaveLogParams(folder, filePrefix, maxFolderSizeMb, maxFileSizeMb);
     Logger log;
 
-    std::thread test([=](Logger* log)
-    {
+    std::thread test([=](Logger* log) {
         while (true)
             log->print(PrintColor::GREEN) << "THREAD" << std::endl;
     }, &log);
