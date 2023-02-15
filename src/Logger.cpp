@@ -13,7 +13,7 @@
 using namespace cr::utils;
 using namespace std::filesystem;
 
-std::mutex ColorPrint::m_printMutex;
+std::mutex ColourPrint::m_printMutex;
 LoggerSettings Logger::m_settings;
 std::mutex Logger::m_fileSysMutex;
 std::string Logger::m_fileName = "";
@@ -34,7 +34,7 @@ std::string getDayTimeString(std::string format)
 }
 
 
-ColorPrint::ColorPrint(PrintColor color, LoggerSettings settings,
+ColourPrint::ColourPrint(PrintColor color, LoggerSettings settings,
                        uint8_t flags, std::string fileName)
     : m_stream(new std::ostringstream())
     , m_color(color)
@@ -44,7 +44,7 @@ ColorPrint::ColorPrint(PrintColor color, LoggerSettings settings,
 {
 }
 
-ColorPrint::~ColorPrint()
+ColourPrint::~ColourPrint()
 {
     static std::map<PrintColor, std::string> colors {
         { PrintColor::NORMAL,   "\x1B[0m"   },
@@ -59,18 +59,18 @@ ColorPrint::~ColorPrint()
 
     if (m_flags & (uint8_t)PrintFlag::CONSOLE)
     {
-        ColorPrint::m_printMutex.lock();
+        ColourPrint::m_printMutex.lock();
         fprintf (stdout, "%s", colors[m_color].c_str());
         fprintf (stdout, "%s", (*m_stream).str().c_str());
         fprintf (stdout, "%s", colors[PrintColor::NORMAL].c_str());
-        ColorPrint::m_printMutex.unlock();
+        ColourPrint::m_printMutex.unlock();
 
         std::cout << std::flush;
     }
 
     if (m_flags & (uint8_t)PrintFlag::FILE)
     {
-        ColorPrint::m_printMutex.lock();
+        ColourPrint::m_printMutex.lock();
         std::ofstream out(m_fileName, std::ios::app);
         auto t = std::time(nullptr);
         auto tm = *std::localtime(&t);
@@ -78,7 +78,7 @@ ColorPrint::~ColorPrint()
         auto mks = transformed % 1000000;
         out << getDayTimeString("%Y-%m-%d %H:%M:%S.") << mks << " "
             << (*m_stream).str(); out.close();
-        ColorPrint::m_printMutex.unlock();
+        ColourPrint::m_printMutex.unlock();
     }
     delete m_stream;
 }
@@ -192,7 +192,7 @@ bool Logger::_reinitLoggingProcess()
 }
 
 
-ColorPrint Logger::print(PrintColor msgColor,  PrintFlag flags)
+ColourPrint Logger::print(PrintColor msgColor,  PrintFlag flags)
 {
     // Check file size.
     m_fileSysMutex.lock();
@@ -207,7 +207,7 @@ ColorPrint Logger::print(PrintColor msgColor,  PrintFlag flags)
     }
     m_fileSysMutex.unlock();
 
-    return ColorPrint(msgColor, m_settings, (uint8_t)flags, m_fileName);
+    return ColourPrint(msgColor, m_settings, (uint8_t)flags, m_fileName);
 }
 
 

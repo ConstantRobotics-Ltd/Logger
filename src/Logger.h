@@ -42,7 +42,7 @@ public:
     int maxFolderSizeMb{0};  /// max folder size (Mb)
 };
 
-class ColorPrint
+class ColourPrint
 {
 public:
     /**
@@ -53,7 +53,7 @@ public:
      * @param flags Additional printing options
      * @param filename Print file name
      */
-    ColorPrint(PrintColor color, LoggerSettings settings,
+    ColourPrint(PrintColor color, LoggerSettings settings,
                uint8_t flags, std::string filename);
 
     /**
@@ -62,7 +62,7 @@ public:
      * The destructor prints all messages, that were added by << operator,
      * before the ColorPrint are destroyed
      */
-    ~ColorPrint();
+    ~ColourPrint();
 
     /**
      * @brief Add message to the print
@@ -133,7 +133,7 @@ public:
      *
      * @return object that will output a message to the stream when destroyed.
      */
-    ColorPrint print(PrintColor color, PrintFlag flags = PrintFlag::CONSOLE);
+    ColourPrint print(PrintColor color, PrintFlag flags = PrintFlag::CONSOLE);
 
 private:
     static LoggerSettings m_settings;
