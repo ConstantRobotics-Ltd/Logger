@@ -44,4 +44,6 @@ endif()
 ## LINK LIBRARIES
 ## linking all dependencies
 ###############################################################################
+link_libraries("$<$<AND:$<CXX_COMPILER_ID:GNU>,$<VERSION_LESS:$<CXX_COMPILER_VERSION>,9.0>>:-lstdc++fs>" )
+
 target_link_libraries(${PROJECT_NAME} Logger)
