@@ -44,4 +44,7 @@ if (NOT TARGET ${PROJECT_NAME})
 endif()
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/)
 
-target_link_libraries(${PROJECT_NAME} /usr/lib/gcc/arm-linux-gnueabihf/8/libstdc++fs.a)
+if(UNIX AND NOT APPLE)
+    target_link_libraries(${PROJECT_NAME} /usr/lib/gcc/arm-linux-gnueabihf/8/libstdc++fs.a)
+endif()
+

@@ -9,6 +9,14 @@
 #include <stdio.h>
 #include <filesystem>
 
+#if defined(linux) || defined(__linux) || defined(__linux__)
+#define __FILENAME__ (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
+#else
+#define __FILENAME__ (strrchr(__FILE__, '\\') ? strrchr(__FILE__, '\\') + 1 : __FILE__)
+#endif
+
+
+
 namespace cr {
 namespace utils {
 
