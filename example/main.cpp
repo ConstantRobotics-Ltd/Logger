@@ -6,8 +6,20 @@
 using namespace std;
 using namespace cr::utils;
 
-// Print thread function prototype.
-void printThreadFunction();
+// Print thread function.
+void printThreadFunction(PrintColor colour, PrintFlag flag)
+{
+    // Init local logger.
+    Logger log;
+
+    // Thread function.
+    int counter = 0;
+    while (true)
+    {
+        // Print something in console.
+        log.print(colour, flag) << "Print thread output " << counter++ << endl;
+    }
+}
 
 // Entry point.
 int main(void)
@@ -27,8 +39,9 @@ int main(void)
     int maxFileSizeMb = 1;
     Logger::setSaveLogParams(folder, filePrefix, maxFolderSizeMb, maxFileSizeMb);
 
-    // Run print thread.
-    thread printThread(&printThreadFunction);
+    // Run print threads.
+    thread printThread1(&printThreadFunction, PrintColor::GREEN, PrintFlag::CONSOLE_AND_FILE);
+    thread printThread2(&printThreadFunction, PrintColor::BLUE, PrintFlag::CONSOLE);
 
     // Main pring loop.
     int counter = 0;
@@ -36,25 +49,10 @@ int main(void)
     {
         // Print something in console and file.
         log.print(PrintColor::RED, PrintFlag::CONSOLE_AND_FILE) <<
-        "Main thread output" << counter++ << endl;
+        "Main thread output " << counter++ << endl;
     }
 
     return 1;
 }
 
-// Print thread function prototype.
-void printThreadFunction()
-{
-    // Init local logger.
-    Logger log;
 
-    // Thread function.
-    int counter = 0;
-    while (true)
-    {
-        // Print something in console.
-        log.print(PrintColor::GREEN, PrintFlag::CONSOLE) <<
-        "Print thread output " << counter++ << endl;
-    }
-
-}

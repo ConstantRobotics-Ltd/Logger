@@ -16,8 +16,6 @@ namespace cr
 namespace utils
 {
 
-
-
 /// Print color indexes.
 enum class PrintColor
 {
@@ -38,7 +36,8 @@ enum class PrintFlag
 {
     CONSOLE = 1,
     FILE = 2,
-    CONSOLE_AND_FILE = CONSOLE | FILE
+    CONSOLE_AND_FILE = CONSOLE | FILE,
+    DISABLE
 };
 
 
@@ -92,7 +91,8 @@ public:
      */
     template <typename T>
     std::ostringstream& operator << (T msg) {
-        *m_stream << msg;
+        if (m_flags != (uint8_t)PrintFlag::DISABLE)
+            *m_stream << msg;
         return *m_stream;
     }
 
@@ -112,10 +112,10 @@ private:
     std::string m_fileName;
 };
 
+
+
 /**
- * @class
- *
- * @brief Implement logger
+ * @brief Logger main class.
  */
 class Logger
 {
@@ -123,7 +123,6 @@ public:
 
     /**
      * @brief Method to get string of current version of library.
-     *
      * @return String of current library version.
      */
     static std::string getVersion();
