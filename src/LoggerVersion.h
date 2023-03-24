@@ -1,7 +1,7 @@
 #pragma once
 
 #define LOGGER_MAJOR_VERSION 1
-#define LOGGER_MINOR_VERSION 0
+#define LOGGER_MINOR_VERSION 1
 #define LOGGER_PATCH_VERSION 0
 
-#define LOGGER_VERSION "1.0.0"
+#define LOGGER_VERSION "1.1.0"

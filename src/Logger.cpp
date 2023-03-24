@@ -1,12 +1,10 @@
 #include "Logger.h"
 #include "LoggerVersion.h"
-
 #include <string>
 #include <algorithm>
 #include <iostream>
 #include <map>
 #include <ctime>
-
 #include <fstream>
 #include <string>
 #include <iostream>

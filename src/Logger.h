@@ -11,10 +11,14 @@
 
 
 
-namespace cr {
-namespace utils {
+namespace cr
+{
+namespace utils
+{
 
-/// Colors for print
+
+
+/// Print color indexes.
 enum class PrintColor
 {
     NORMAL,
@@ -27,7 +31,9 @@ enum class PrintColor
     WHITE
 };
 
-/// Options for print
+
+
+/// Print options.
 enum class PrintFlag
 {
     CONSOLE = 1,
@@ -35,15 +41,25 @@ enum class PrintFlag
     CONSOLE_AND_FILE = CONSOLE | FILE
 };
 
+
+
+/// Logger settings.
 class LoggerSettings
 {
 public:
-    std::string prefix{""};  /// start filename (e.g. /LOG***.txt)
-    std::string folder{""};  /// log folder
-    int maxFileSizeMb{0};    /// max file size (Mb)
-    int maxFolderSizeMb{0};  /// max folder size (Mb)
+    /// start filename (e.g. /LOG***.txt).
+    std::string prefix{""};
+    /// log folder.
+    std::string folder{""};
+    /// max file size (Mb).
+    int maxFileSizeMb{0};
+    /// max folder size (Mb).
+    int maxFolderSizeMb{0};
 };
 
+
+
+/// Colour pring class.
 class ColourPrint
 {
 public:
@@ -55,8 +71,10 @@ public:
      * @param flags Additional printing options
      * @param filename Print file name
      */
-    ColourPrint(PrintColor color, LoggerSettings settings,
-               uint8_t flags, std::string filename);
+    ColourPrint(PrintColor color,
+                LoggerSettings settings,
+                uint8_t flags,
+                std::string filename);
 
     /**
      * @brief Default destructor
@@ -79,11 +97,18 @@ public:
     }
 
 private:
+
+    /// Print mutex.
     static std::mutex m_printMutex;
+    /// Pring stream.
     std::ostringstream* m_stream;
+    /// Print colour.
     PrintColor m_color;
+    /// Print parameters.
     LoggerSettings m_settings;
+    /// Print flags.
     uint8_t m_flags;
+    /// File name.
     std::string m_fileName;
 };
 
@@ -115,38 +140,43 @@ public:
 
     /**
      * @brief Method for setting params for loggers
-     *
      * @param folder Log folder
      * @param filePrefix Start log file filename
      * @param maxFolderSizeMb Max file size (Mb)
      * @param maxFileSizeMb Max folder size (Mb)
-     *
      * @return true if params are set.
      */
-    static bool setSaveLogParams(
-            std::string folder, std::string filePrefix,
-            int maxFolderSizeMb, int maxFileSizeMb);
+    static bool setSaveLogParams(std::string folder,
+                                 std::string filePrefix,
+                                 int maxFolderSizeMb,
+                                 int maxFileSizeMb);
 
     /**
-     * @brief Methods to prints message through the operator "<<"
-     *
+     * @brief Methods to prints message through the operator "<<".
      * @param color Print color
      * @param flags Options for print
-     *
      * @return object that will output a message to the stream when destroyed.
      */
     ColourPrint print(PrintColor color, PrintFlag flags = PrintFlag::CONSOLE);
 
 private:
+
+    /// Logger parameters.
     static LoggerSettings m_settings;
+    /// File name.
     static std::string m_fileName;
+    /// Global mutex.
     static std::mutex m_fileSysMutex;
+    /// Settings initiated flag.
     static bool m_isSettingsSetup;
 
     /// File info structure.
     typedef struct {
+        /// Full file name.
         std::filesystem::path name;
+        /// File size.
         uint32_t size;
+        /// File time.
         std::filesystem::file_time_type time;
     } FileInfo;
 
