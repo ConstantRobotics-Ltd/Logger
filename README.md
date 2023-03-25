@@ -8,21 +8,14 @@
 
 - [Overview](#Overview)
 - [Versions](#Versions)
-- [Supported pixel formats](#Supported-pixel-formats)
-- [Frame class description](#Frame-class-description)
-  - [Frame class declaration](#Frame-class-declaration)
+- [Logger class description](#Logger-class-description)
+  - [Logger class declaration](#Logger-class-declaration)
   - [Default constructor](#Default-constructor)
-  - [Constructor with parameters](#Constructor-with-parameters)
-  - [Copy-constructor](#Copy-constructor)
-  - [getVersion method](#getVersion-method)
-  - [Copy operator =](#Copy-operator-=)
-  - [cloneTo method](#cloneTo-method)
-  - [Compare operator ==](#Compare-operator-==)
-  - [Compare operator !=](#Compare-operator-!=)
-  - [release method](#release-method)
-  - [serialize method](#serialize-method)
-  - [deserialize method](#deserialize-method)
-  - [Frame class public members](#Frame-class-public-members)
+  - [setSaveLogParams method](#setSaveLogParams-method)
+  - [print method](#print-method)
+  - [PrintColor enum](#PrintColor-enum)
+  - [PrintFlag enum](#PrintFlag-enum)
+- [Example](#Example)
 
 # Overview
 
@@ -146,7 +139,7 @@ Logger::setSaveLogParams(folder, filePrefix, maxFolderSizeMb, maxFileSizeMb);
 
 ## print method
 
-**print(...)** method intended to print data in console and(or) file. The method provides the same interface as **std::cout** method and supports all **std::cout** formats. The method allows the user to define the colour of the output to the console and the direction of the output (console, file or file and console). Method declaration:
+**print(...)** method intended to print data in console and(or) file. The method provides the same interface as **std::cout** method and supports all **std::cout** formats. The method allows the user to define the colour of the output to the console and the direction of the output (console, file or file and console). When the library prints in file it adds additional information about date and time (e.g.: **2023-03-24 15:56:52.127716 Something to print**) and moved to new line after printing a string. Method declaration:
 
 ```cpp
 ColourPrint print(PrintColor color, PrintFlag flags = PrintFlag::CONSOLE);
@@ -154,146 +147,102 @@ ColourPrint print(PrintColor color, PrintFlag flags = PrintFlag::CONSOLE);
 
 | Parameter | Description                                                  |
 | --------- | ------------------------------------------------------------ |
-| color     | Print color. Colors defined in **PrintColor** enum (logger.h file). |
-| flags     |                                                              |
+| color     | Print color. Colors defined in **PrintColor** enum (**logger.h** file). |
+| flags     | Print flag to define print direction: console, file, console and file or disabled. Print flags defines in **PrintFlag** enum (**Logger.h** file). |
 
-**Returns:** TRUE if parameters are set or FALSE if not. 
+**Returns:** TRUE if parameters are set or FALSE if not.
 
+## PrintColor enum
 
-
-
-
-
-
-
-
-
-
-## CONTENTS
-
-- [OVERVIEW](#overview)
-- [API DESCRIPTION](#api-description)
-  - [getVersion(..)](#getversion)
-  - [CTOR and DTOR(..)](#ctro-and-dtor)
-  - [setSaveLogParams(..)](#setsavelogparams)
-  - [print(..)](#print)
-- [USAGE EXAMPLE](#usage-example)
-
-## OVERVIEW
-
-This project helps implement simple color logging logic.
-
-## API DESCRIPTION
-
-The **Logger** contains one main class `Logger` which can be used 
-to simplify logging. 
-
-### getVersion(..)
+**PrintColor** enum declared in **Logger.h** file and defines . Enum declaration:
 
 ```cpp
-/**
-* @brief Method to get string of current version of library.
-*
-* @return String of current library version.
-*/
-static std::string getVersion();
+enum class PrintColor
+{
+    NORMAL,
+    RED,
+    GREEN,
+    YELLOW,
+    BLUE,
+    MAGENTA,
+    CYAN,
+    WHITE
+};
 ```
 
-##### Description
+## PrintFlag enum
 
-*Static method to get string of current version of library.*
-
-### CTOR and DTOR(..)
+**PrintFlag** enum defines output options: print to console, print to file, print to file and console or disable printing. Enum declaration:
 
 ```cpp
-/**
- * @brief Class constructor.
- */
-Logger();
-
-/**
- * @brief Class destructor.
- */
-~Logger();
-```
-##### Description
-
-*constructor and destructor methods to create Logger.*
-
-### setSaveLogParams(..)
-
-```cpp
-/**
- * @brief Method for setting params for loggers
- *
- * @param folder Log folder
- * @param filePrefix Start log file filename
- * @param maxFolderSizeMb Max file size (Mb)
- * @param maxFileSizeMb Max folder size (Mb)
- *
- * @return true if params are set.
- */
-static bool setSaveLogParams(
-        std::string folder, std::string filePrefix,
-        int maxFolderSizeMb, int maxFileSizeMb);
+enum class PrintFlag
+{
+    CONSOLE = 1,
+    FILE = 2,
+    CONSOLE_AND_FILE = CONSOLE | FILE,
+    DISABLE
+};
 ```
 
-##### Description
+# Example
 
-*Static method for setting params for loggers.*
-
-### print(..)
-
-```cpp
- /**
- * @brief Methods to prints message through the operator "<<"
- *
- * @param color Print color
- * @param flags Options for print
- *
- * @return object that will output a message to the stream when destroyed.
- */
-ColorPrint print(PrintColor color, PrintFlag flags = PrintFlag::CONSOLE);
-```
-
-##### Description
-
-*Methods to prints the received message through the operator "<<".*
-
-## USAGE EXAMPLE
+Sample application creates three thread. Each thread print information to file, console or both.
 
 ```cpp
 #include <iostream>
-#include <map>
-
+#include <thread>
 #include "Logger.h"
+
+// Link namespaces.
+using namespace std;
 using namespace cr::utils;
 
+// Print thread function.
+void printThreadFunction(PrintColor colour, PrintFlag flag)
+{
+    // Init local logger.
+    Logger log;
+
+    // Thread function.
+    int counter = 0;
+    while (true)
+    {
+        // Print something in console.
+        log.print(colour, flag) << "Print thread output " << counter++ << endl;
+    }
+}
 
 // Entry point.
 int main(void)
 {
-    std::cout<<"=================================================" << std::endl;
-    std::cout<<"LoggerExample " << Logger::getVersion()            << std::endl;
-    std::cout<<"=================================================" << std::endl;
-    std::cout<<std::endl;
+    cout << "=================================================" << endl;
+    cout << "Logger v" << Logger::getVersion() << " example"    << endl;
+    cout << "=================================================" << endl;
+    cout << endl;
 
-    std::string folder = "LoggerExample";
-    std::string filePrefix = "LOG";
-    int maxFolderSizeMb = 100;
-    int maxFileSizeMb = 1;
-    Logger::setSaveLogParams(folder, filePrefix, maxFolderSizeMb, maxFileSizeMb);
+    // Init logger.
     Logger log;
 
-    std::thread test([=](Logger* log) {
-        while (true)
-            log->print(PrintColor::GREEN) << "THREAD" << std::endl;
-    }, &log);
+    // Set Logger global parameters to write log in files.
+    string folder = "LoggerExample";
+    string filePrefix = "LOG";
+    int maxFolderSizeMb = 3;
+    int maxFileSizeMb = 1;
+    Logger::setSaveLogParams(folder, filePrefix, maxFolderSizeMb, maxFileSizeMb);
 
-    while(true) {
-        log.print(PrintColor::RED, PrintFlag::FILE) << "MAIN" << std::endl;
+    // Run print threads.
+    thread printThread1(&printThreadFunction, PrintColor::GREEN, PrintFlag::CONSOLE_AND_FILE);
+    thread printThread2(&printThreadFunction, PrintColor::BLUE, PrintFlag::CONSOLE);
+
+    // Main pring loop.
+    int counter = 0;
+    while (true)
+    {
+        // Print something in console and file.
+        log.print(PrintColor::RED, PrintFlag::CONSOLE_AND_FILE) <<
+        "Main thread output " << counter++ << endl;
     }
 
-	return 1;
+    return 1;
 }
 ```
