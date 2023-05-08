@@ -1,6 +1,6 @@
 ![logger_logo](_static/logger_logo.png)
 
-**v1.1.0**
+**v1.2.0**
 
 ------
 
@@ -28,7 +28,8 @@
 | Version | Release date | What's new                                                   |
 | ------- | ------------ | ------------------------------------------------------------ |
 | 1.0.0   | 13.02.2023   | First version.                                               |
-| 1.0.0   | 24.03.2023   | - Added new print option DISABLE.<br />- Example updated.<br />- Documentation updated. |
+| 1.1.0   | 24.03.2023   | - Added new print option DISABLE.<br />- Example updated.<br />- Documentation updated. |
+| 1.2.0   | 08.05.2023   | - Added macro to print file name.                            |
 
 # Logger class description
 
