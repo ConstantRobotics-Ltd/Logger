@@ -40,8 +40,10 @@ int main(void)
     Logger::setSaveLogParams(folder, filePrefix, maxFolderSizeMb, maxFileSizeMb);
 
     // Run print threads.
-    thread printThread1(&printThreadFunction, PrintColor::GREEN, PrintFlag::CONSOLE_AND_FILE);
-    thread printThread2(&printThreadFunction, PrintColor::BLUE, PrintFlag::CONSOLE);
+    thread printThread1(&printThreadFunction, PrintColor::GREEN,
+                        PrintFlag::CONSOLE_AND_FILE);
+    thread printThread2(&printThreadFunction, PrintColor::BLUE,
+                        PrintFlag::CONSOLE);
 
     // Main pring loop.
     int counter = 0;
@@ -49,6 +51,11 @@ int main(void)
     {
         // Print something in console and file.
         log.print(PrintColor::RED, PrintFlag::CONSOLE_AND_FILE) <<
+        "Main thread output " << counter++ << endl;
+
+        // Print something in console only.
+        log.print(PrintColor::CYAN, PrintFlag::CONSOLE) <<
+        "[" << __LOGFILENAME__ << "][" << __LINE__ << "] " <<
         "Main thread output " << counter++ << endl;
     }
 

@@ -1,8 +1,10 @@
 ![logger_logo](_static/logger_logo.png)
 
-**v1.2.1**
+**v1.2.2**
 
 ------
+
+
 
 # Table of contents
 
@@ -16,10 +18,15 @@
   - [PrintColor enum](#PrintColor-enum)
   - [PrintFlag enum](#PrintFlag-enum)
 - [Example](#Example)
+- [Build and connect to your project](#Build-and-connect-to-your-project)
+
+
 
 # Overview
 
 **Logger** C++ library provides logging functions: printing in terminal and(or) printing in file. File **Logger.h** contains declaration of class **Logger** which provides logging functions. **Logger** class provide thread safe method to print info file or terminal. The user can create multiple **Logger** class objects and the library will provide thread-safe output to the terminal and thread-safe writing to the file (all data will be written to the file in sequence). The **Logger** class also provides color output to the terminal. When writing the log to a text file, the **Logger** class controls the size of the file as well as the total size of the files in the directory and deletes old files if the directory size is exceeded.
+
+
 
 # Versions
 
@@ -31,8 +38,13 @@
 | 1.1.0   | 24.03.2023   | - Added new print option DISABLE.<br />- Example updated.<br />- Documentation updated. |
 | 1.2.0   | 08.05.2023   | - Added macro to print file name.                            |
 | 1.2.1   | 20.06.2023   | - Required CMake version updated to 3.13.                    |
+| 1.2.2   | 06.07.2023   | - Documentation updated.<br />- Example updated.<br />- License added.<br />- Repository made public. |
+
+
 
 # Logger class description
+
+
 
 ## Logger class declaration
 
@@ -54,17 +66,14 @@ public:
      * @return String of current library version.
      */
     static std::string getVersion();
-
     /**
      * @brief Class constructor.
      */
     Logger();
-
     /**
      * @brief Class destructor.
      */
     ~Logger();
-
     /**
      * @brief Method for setting params for loggers
      * @param folder Log folder
@@ -77,7 +86,6 @@ public:
                                  std::string filePrefix,
                                  int maxFolderSizeMb,
                                  int maxFileSizeMb);
-
     /**
      * @brief Methods to prints message through the operator "<<".
      * @param color Print color
@@ -90,6 +98,8 @@ public:
 }
 ```
 
+
+
 ## Default constructor
 
 Default Logger class constructor doesn't do anything. It doesn't allocate memory. Constructor declaration:
@@ -97,6 +107,8 @@ Default Logger class constructor doesn't do anything. It doesn't allocate memory
 ```cpp
 Logger();
 ```
+
+
 
 ## getVersion method
 
@@ -111,6 +123,14 @@ Method can be used without **Logger** class instance. Example:
 ```cpp
 std::cout << "Logger class version: " << cr::utils::Logger::getVersion() << std::endl;
 ```
+
+Console output:
+
+```bash
+Logger class version: 1.2.2
+```
+
+
 
 ## setSaveLogParams method
 
@@ -139,6 +159,8 @@ int maxFileSizeMb = 1;
 Logger::setSaveLogParams(folder, filePrefix, maxFolderSizeMb, maxFileSizeMb);
 ```
 
+
+
 ## print method
 
 **print(...)** method intended to print data in console and(or) file. The method provides the same interface as **std::cout** method and supports all **std::cout** formats. The method allows the user to define the colour of the output to the console and the direction of the output (console, file or file and console). When the library prints in file it adds additional information about date and time (e.g.: **2023-03-24 15:56:52.127716 Something to print**) and moved to new line after printing a string. Method declaration:
@@ -153,6 +175,8 @@ ColourPrint print(PrintColor color, PrintFlag flags = PrintFlag::CONSOLE);
 | flags     | Print flag to define print direction: console, file, console and file or disabled. Print flags defines in **PrintFlag** enum (**Logger.h** file). |
 
 **Returns:** TRUE if parameters are set or FALSE if not.
+
+
 
 ## PrintColor enum
 
@@ -172,6 +196,8 @@ enum class PrintColor
 };
 ```
 
+
+
 ## PrintFlag enum
 
 **PrintFlag** enum defines output options: print to console, print to file, print to file and console or disable printing. Enum declaration:
@@ -185,6 +211,8 @@ enum class PrintFlag
     DISABLE
 };
 ```
+
+
 
 # Example
 
@@ -233,8 +261,10 @@ int main(void)
     Logger::setSaveLogParams(folder, filePrefix, maxFolderSizeMb, maxFileSizeMb);
 
     // Run print threads.
-    thread printThread1(&printThreadFunction, PrintColor::GREEN, PrintFlag::CONSOLE_AND_FILE);
-    thread printThread2(&printThreadFunction, PrintColor::BLUE, PrintFlag::CONSOLE);
+    thread printThread1(&printThreadFunction, PrintColor::GREEN,
+                        PrintFlag::CONSOLE_AND_FILE);
+    thread printThread2(&printThreadFunction, PrintColor::BLUE,
+                        PrintFlag::CONSOLE);
 
     // Main pring loop.
     int counter = 0;
@@ -243,8 +273,123 @@ int main(void)
         // Print something in console and file.
         log.print(PrintColor::RED, PrintFlag::CONSOLE_AND_FILE) <<
         "Main thread output " << counter++ << endl;
+
+        // Print something in console only.
+        log.print(PrintColor::CYAN, PrintFlag::CONSOLE) <<
+        "[" << __LOGFILENAME__ << "][" << __LINE__ << "] " <<
+        "Main thread output " << counter++ << endl;
     }
 
     return 1;
 }
 ```
+
+
+
+# Build and connect to your project
+
+Typical commands to build **Logger** library:
+
+```bash
+git clone https://github.com/ConstantRobotics-Ltd/Logger.git
+cd Logger
+mkdir build
+cd build
+cmake ..
+make
+```
+
+If you want connect Logger library to your CMake project as source code you can make follow. For example, if your repository has structure:
+
+```bash
+CMakeLists.txt
+src
+    CMakeList.txt
+    yourLib.h
+    yourLib.cpp
+```
+
+You can add repository **Logger** as submodule by command:
+
+```bash
+cd <your respository folder>
+git submodule add https://github.com/ConstantRobotics-Ltd/Logger.git 3rdparty/Logger
+```
+
+In you repository folder will be created folder **3rdparty/Logger** which contains files of **Logger** repository. New structure of your repository:
+
+```bash
+CMakeLists.txt
+src
+    CMakeList.txt
+    yourLib.h
+    yourLib.cpp
+3rdparty
+    Logger
+```
+
+Create CMakeLists.txt file in **3rdparty** folder. CMakeLists.txt should contain:
+
+```cmake
+cmake_minimum_required(VERSION 3.13)
+
+################################################################################
+## 3RD-PARTY
+## dependencies for the project
+################################################################################
+project(3rdparty LANGUAGES CXX)
+
+################################################################################
+## SETTINGS
+## basic 3rd-party settings before use
+################################################################################
+# To inherit the top-level architecture when the project is used as a submodule.
+SET(PARENT ${PARENT}_YOUR_PROJECT_3RDPARTY)
+# Disable self-overwriting of parameters inside included subdirectories.
+SET(${PARENT}_SUBMODULE_CACHE_OVERWRITE OFF CACHE BOOL "" FORCE)
+
+################################################################################
+## CONFIGURATION
+## 3rd-party submodules configuration
+################################################################################
+SET(${PARENT}_SUBMODULE_LOGGER                          ON  CACHE BOOL "" FORCE)
+if (${PARENT}_SUBMODULE_LOGGER)
+    SET(${PARENT}_LOGGER                                ON  CACHE BOOL "" FORCE)
+    SET(${PARENT}_LOGGER_EXAMPLES                       OFF CACHE BOOL "" FORCE)
+endif()
+
+################################################################################
+## INCLUDING SUBDIRECTORIES
+## Adding subdirectories according to the 3rd-party configuration
+################################################################################
+if (${PARENT}_SUBMODULE_LOGGER)
+    add_subdirectory(Logger)
+endif()
+```
+
+File **3rdparty/CMakeLists.txt** adds folder **Logger** to your project and excludes example (Logger class example) from compiling. Your repository new structure will be:
+
+```bash
+CMakeLists.txt
+src
+    CMakeList.txt
+    yourLib.h
+    yourLib.cpp
+3rdparty
+    CMakeLists.txt
+    Logger
+```
+
+Next you need include folder 3rdparty in main **CMakeLists.txt** file of your repository. Add string at the end of your main **CMakeLists.txt**:
+
+```cmake
+add_subdirectory(3rdparty)
+```
+
+Next you have to include Logger library in your **src/CMakeLists.txt** file:
+
+```cmake
+target_link_libraries(${PROJECT_NAME} Logger)
+```
+
+Done!

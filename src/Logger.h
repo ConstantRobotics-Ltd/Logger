@@ -72,7 +72,6 @@ class ColourPrint
 public:
     /**
      * @brief Class constructor.
-     *
      * @param color Print color
      * @param settings Logger settings for print
      * @param flags Additional printing options
@@ -85,7 +84,6 @@ public:
 
     /**
      * @brief Default destructor
-     *
      * The destructor prints all messages, that were added by << operator,
      * before the ColorPrint are destroyed
      */
