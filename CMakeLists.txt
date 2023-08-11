@@ -29,8 +29,9 @@ endif()
 ## CONFIGURATION
 ## project configuration
 ################################################################################
-SET(${PARENT}_LOGGER                          ON CACHE BOOL "" ${REWRITE_FORCE})
-SET(${PARENT}_LOGGER_EXAMPLES                 ON CACHE BOOL "" ${REWRITE_FORCE})
+SET(${PARENT}_LOGGER                         ON  CACHE BOOL "" ${REWRITE_FORCE})
+SET(${PARENT}_LOGGER_EXAMPLE                 ON  CACHE BOOL "" ${REWRITE_FORCE})
+
 
 
 ###############################################################################
@@ -40,6 +41,6 @@ SET(${PARENT}_LOGGER_EXAMPLES                 ON CACHE BOOL "" ${REWRITE_FORCE})
 if (${PARENT}_LOGGER)
     add_subdirectory(src)
 endif()
-if (${PARENT}_LOGGER_EXAMPLES)
+if (${PARENT}_LOGGER_EXAMPLE)
     add_subdirectory(example)
 endif()

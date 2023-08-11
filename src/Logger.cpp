@@ -10,16 +10,25 @@
 #include <iostream>
 #include <iomanip>
 
+
+
+// Link namespaces.
 using namespace cr::utils;
 using namespace std::filesystem;
 
+
+
+// Global static variables.
 std::mutex ColourPrint::m_printMutex;
 LoggerSettings Logger::m_settings;
 std::mutex Logger::m_fileSysMutex;
 std::string Logger::m_fileName = "";
 bool Logger::m_isSettingsSetup = false;
 
-namespace cr::utils {
+
+
+namespace cr::utils
+{
 std::string getDayTimeString(std::string format)
 {
     auto now = std::chrono::system_clock::now();
@@ -34,15 +43,19 @@ std::string getDayTimeString(std::string format)
 }
 
 
+
 ColourPrint::ColourPrint(PrintColor color, LoggerSettings settings,
-                       uint8_t flags, std::string fileName)
-    : m_stream(new std::ostringstream())
-    , m_color(color)
-    , m_settings(settings)
-    , m_flags(flags)
-    , m_fileName(fileName)
+                        uint8_t flags, std::string fileName)
+                        : m_stream(new std::ostringstream())
+                        , m_color(color)
+                        , m_settings(settings)
+                        , m_flags(flags)
+                        , m_fileName(fileName)
 {
+
 }
+
+
 
 ColourPrint::~ColourPrint()
 {
@@ -83,18 +96,27 @@ ColourPrint::~ColourPrint()
     delete m_stream;
 }
 
+
+
 std::string Logger::getVersion()
 {
     return LOGGER_VERSION;
 }
 
+
+
 Logger::Logger()
 {
+
 }
+
+
 
 Logger::~Logger()
 {
 }
+
+
 
 bool Logger::setSaveLogParams(std::string folder, std::string filePrefix,
                               int maxFolderSizeMb, int maxFileSizeMb)
@@ -138,6 +160,8 @@ std::vector<Logger::FileInfo> Logger::_getFilesInFolder(std::string folder)
     return files;
 }
 
+
+
 void Logger::_removeUnnecessaryFiles(std::vector<FileInfo> files, int maxFolderSizeMb)
 {
     // Calculate folder size.
@@ -164,6 +188,8 @@ void Logger::_removeUnnecessaryFiles(std::vector<FileInfo> files, int maxFolderS
             break;
     }
 }
+
+
 
 bool Logger::_reinitLoggingProcess()
 {
@@ -192,6 +218,7 @@ bool Logger::_reinitLoggingProcess()
 }
 
 
+
 ColourPrint Logger::print(PrintColor msgColor,  PrintFlag flags)
 {
     // Check file size.
@@ -209,5 +236,4 @@ ColourPrint Logger::print(PrintColor msgColor,  PrintFlag flags)
 
     return ColourPrint(msgColor, m_settings, (uint8_t)flags, m_fileName);
 }
-
 

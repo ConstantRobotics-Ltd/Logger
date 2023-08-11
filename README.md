@@ -1,6 +1,6 @@
 ![logger_logo](_static/logger_logo.png)
 
-**v1.2.2**
+**v1.2.3**
 
 ------
 
@@ -39,6 +39,7 @@
 | 1.2.0   | 08.05.2023   | - Added macro to print file name.                            |
 | 1.2.1   | 20.06.2023   | - Required CMake version updated to 3.13.                    |
 | 1.2.2   | 06.07.2023   | - Documentation updated.<br />- Example updated.<br />- License added.<br />- Repository made public. |
+| 1.2.3   | 11.08.2023   | - Code clean up.<br />- Updated example. Fixed the same name for log folder as name of executable file. |
 
 
 
@@ -127,7 +128,7 @@ std::cout << "Logger class version: " << cr::utils::Logger::getVersion() << std:
 Console output:
 
 ```bash
-Logger class version: 1.2.2
+Logger class version: 1.2.3
 ```
 
 
@@ -254,7 +255,7 @@ int main(void)
     Logger log;
 
     // Set Logger global parameters to write log in files.
-    string folder = "LoggerExample";
+    string folder = "Logs";
     string filePrefix = "LOG";
     int maxFolderSizeMb = 3;
     int maxFileSizeMb = 1;
@@ -355,7 +356,7 @@ SET(${PARENT}_SUBMODULE_CACHE_OVERWRITE OFF CACHE BOOL "" FORCE)
 SET(${PARENT}_SUBMODULE_LOGGER                          ON  CACHE BOOL "" FORCE)
 if (${PARENT}_SUBMODULE_LOGGER)
     SET(${PARENT}_LOGGER                                ON  CACHE BOOL "" FORCE)
-    SET(${PARENT}_LOGGER_EXAMPLES                       OFF CACHE BOOL "" FORCE)
+    SET(${PARENT}_LOGGER_EXAMPLE                        OFF CACHE BOOL "" FORCE)
 endif()
 
 ################################################################################

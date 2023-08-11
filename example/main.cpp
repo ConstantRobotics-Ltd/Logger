@@ -33,7 +33,7 @@ int main(void)
     Logger log;
 
     // Set Logger global parameters to write log in files.
-    string folder = "LoggerExample";
+    string folder = "Logs";
     string filePrefix = "LOG";
     int maxFolderSizeMb = 3;
     int maxFileSizeMb = 1;
