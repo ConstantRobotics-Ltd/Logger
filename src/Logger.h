@@ -134,16 +134,6 @@ public:
     static std::string getVersion();
 
     /**
-     * @brief Class constructor.
-     */
-    Logger();
-
-    /**
-     * @brief Class destructor.
-     */
-    ~Logger();
-
-    /**
      * @brief Method for setting params for loggers
      * @param folder Log folder
      * @param filePrefix Start log file filename

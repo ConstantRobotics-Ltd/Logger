@@ -105,19 +105,6 @@ std::string Logger::getVersion()
 
 
 
-Logger::Logger()
-{
-
-}
-
-
-
-Logger::~Logger()
-{
-}
-
-
-
 bool Logger::setSaveLogParams(std::string folder, std::string filePrefix,
                               int maxFolderSizeMb, int maxFileSizeMb)
 {
