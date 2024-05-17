@@ -6,7 +6,7 @@ cmake_minimum_required(VERSION 3.13)
 ## LIBRARY-PROJECT
 ## name and version
 ###############################################################################
-project(Logger VERSION 1.2.4 LANGUAGES CXX)
+project(Logger VERSION 1.2.5 LANGUAGES CXX)
 
 
 

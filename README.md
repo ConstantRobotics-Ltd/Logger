@@ -1,10 +1,10 @@
-![logger_web_logo](_static/logger_web_logo.png)
+![logger_web_logo](./static/logger_web_logo.png)
 
 
 
 # **Logger C++ library**
 
-**v1.2.4**
+**v1.2.5**
 
 
 
@@ -26,8 +26,7 @@
 
 # Overview
 
-**Logger** C++ library provides logging functions: printing in terminal and(or) printing in file. File **Logger.h** contains declaration of class **Logger** which provides logging functions. **Logger** class provide thread safe method to print info file or terminal. The user can create multiple **Logger** class objects and the library will provide thread-safe output to the terminal and thread-safe writing to the file (all data will be written to the file in sequence). The **Logger** class also provides color output to the terminal. When writing the log to a text file, the **Logger** class controls the size of the file as well as the total size of the files in the directory and deletes old files if the directory size is exceeded. It uses C++17 standard. The library is licensed under the **Apache 2.0** license.
-
+**Logger** C++ library provides logging functions: printing in terminal and(or) printing in file. File **Logger.h** contains declaration of class **Logger** which provides logging functions. **Logger** class provide thread safe method to print info file or terminal. The user can create multiple **Logger** class objects and the library will provide thread-safe output to the terminal and thread-safe writing to the file (all data will be written to the file in sequence). The **Logger** class also provides color output to the terminal. When writing the log to a text file, the **Logger** class controls the size of the file as well as the total size of the files in the directory and deletes old files if the directory size is exceeded. It uses C++17 standard and doesn't have third-party dependencies. The library is licensed under the **Apache 2.0** license.
 
 
 
@@ -44,6 +43,7 @@
 | 1.2.2   | 06.07.2023   | - Documentation updated.<br />- Example updated.<br />- License added.<br />- Repository made public. |
 | 1.2.3   | 11.08.2023   | - Code clean up.<br />- Updated example. Fixed the same name for log folder as name of executable file. |
 | 1.2.4   | 20.03.2024   | - Documentation updated. |
+| 1.2.5   | 17.05.2024   | - Documentation updated. |
 
 
 
@@ -53,15 +53,12 @@ The library is supplied only by source code. The user is given a set of files in
 
 ```xml
 CMakeLists.txt ---------- Main CMake file of the library.
-3rdparty ---------------- Folder with 3rdparty libraries.
-    CMakeLists.txt ------ CMake file for to include 3rdparty libraries.
-    Frame --------------- Folder with Frame library source code.
 src --------------------- Folder with library source code.
     Logger.cpp ---------- C++ implementation file.
     Logger.h ------------ Library main header file.
     LoggerVersion.h ----- Header file with library version.
     LoggerVersion.h.in -- Service CMake file to generate version file.
-example ----------------- Example.
+example ----------------- Folder for example application.
     CMakeLists.txt ------ CMake file of the example.
     main.cpp ------------ Source C++ file of the example.
 ```
@@ -114,7 +111,7 @@ std::cout << "Logger class version: " << cr::utils::Logger::getVersion() << std:
 Console output:
 
 ```bash
-Logger class version: 1.2.4
+Logger class version: 1.2.5
 ```
 
 
@@ -167,7 +164,7 @@ ColourPrint print(PrintColor color, PrintFlag flags = PrintFlag::CONSOLE);
 
 ## PrintColor enum
 
-**PrintColor** enum declared in **Logger.h** file and defines . Enum declaration:
+**PrintColor** enum declared in **Logger.h** file and defines. Enum declaration:
 
 ```cpp
 enum class PrintColor
