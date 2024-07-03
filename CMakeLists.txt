@@ -30,7 +30,7 @@ endif()
 ## project configuration
 ################################################################################
 SET(${PARENT}_LOGGER                         ON  CACHE BOOL "" ${REWRITE_FORCE})
-SET(${PARENT}_LOGGER_EXAMPLE                 ON  CACHE BOOL "" ${REWRITE_FORCE})
+SET(${PARENT}_LOGGER_EXAMPLE                 OFF CACHE BOOL "" ${REWRITE_FORCE})
 
 
 
